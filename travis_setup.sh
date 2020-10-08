@@ -13,6 +13,13 @@ elif [ "$TRAVIS_OS_NAME" == "linux" ]; then
   make
   sudo make install
   cd ..
+elif [ "$TRAVIS_OS_NAME" == "windows" ]; then  
+  curl -o ./nuget.exe -L https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+  chmod a+x ./nuget.exe
+  ./nuget.exe install librdkafka.redist -version 1.4.4
+  mkdir cbuild/lib
+  cp librdkafka.redist.1.4.4/build/native/lib/win/x64/win-x64-Release/v120/* cbuild/lib
+  cp -r librdkafka.redist.1.4.4/build/native/include ./cbuild
 else
   echo "$TRAVIS_OS_NAME is currently not supported"  
 fi

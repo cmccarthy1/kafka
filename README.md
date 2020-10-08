@@ -108,7 +108,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/lib
 
 At present the Windows build of the `.dll` for the kafka interface has been tested on Visual Studio 2017 with `librdkafka.redist.1.0.0`. The following are the steps completed to achieve this
 
-1. Install nuget for Windows: <https:/nuget.com/downloads>
+1. Install nuget for Windows: <https://www.nuget.org/downloads>
 
 2. Install the redistributed version of librdkafka which is suitable for use with windows, documentation can be found [here](https://www.nuget.org/packages/librdkafka.redist/1.0.0).
 

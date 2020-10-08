@@ -14,13 +14,19 @@ message(STATUS "Build Tool : ${CMAKE_BUILD_TOOL}")
 message(STATUS "Custom librdkafka API location : $ENV{BUILD_HOME}")
 
 include_directories (
-    $ENV{BUILD_HOME}/include
+    $ENV{BUILD_HOME}/include # Absolute BUILD_HOME
+    ${CMAKE_BINARY_DIR}/$ENV{BUILD_HOME}/include # Relative BUILD_HOME
+    ${CMAKE_BINARY_DIR} # For 'k.h', downloaded below
 )
 
 find_library(LIBRDKAFKA
-    NAMES rdkafka
-    HINTS "$ENV{BUILD_HOME}/lib/"
+    NAMES librdkafka rdkafka
+    HINTS # Don't quote these in case BUILD_HOME is already quoted
+    $ENV{BUILD_HOME}/lib # Absolute
+    ${CMAKE_BINARY_DIR}/$ENV{BUILD_HOME}/lib # Relative
 )
+
+file(DOWNLOAD "https://github.com/KxSystems/kdb/raw/master/c/c/k.h" "${CMAKE_BINARY_DIR}/k.h" )
 
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
     set(INSTALL_SCRIPT "install.bat")

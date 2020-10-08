@@ -7,6 +7,7 @@ jobs:
   - dist: bionic
     os: linux
   - os: osx
+  - os: windows
 language: c
 compiler: gcc
 os: linux
