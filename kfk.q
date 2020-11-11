@@ -66,7 +66,7 @@ funcs:(
           // .kfk.AssignmentDel[client_id:i;topic_partition:S!J]:()
         (`kfkAssignmentDel;2);
         // .kfk.OffsetsForTimes[client_id:i;topic:s;partition_offsets:I!J;timeout_ms]:partition_offsets
-        (`kfkOffsetsForTimes;4)
+        (`kfkoffsetForTime;4)
 	);
 
 // binding functions from dictionary funcs using rule
@@ -230,6 +230,22 @@ i.checkDict:{[dict]
   if[not 7h =type value dict;'"Dictionary values must be of type long"];
   }
 
+// Retrieval of offset associated with a specified time
+/* cid is an integer denoting client id
+/* top is the topic which is being queried
+/* partoff is a dictionary mapping the partition to the offset being queried
+/*   in this case offset can be a long denoting milliseconds since 1970.01.01,
+/*   a timestamp or date.
+/* tout is the maximum timeout in milliseconds the function will block for
+OffsetsForTimes:{[cid;top;partoff;tout]
+  if[6h<>type key partoff;'"'partoff' key must be an integer list"];
+  offsetType:type value partoff;
+  if[not offsetType in(7h;12h;14h);
+    '"'partoff' key must be a list of longs, timestamps or dates only"];
+  timeOffset:$[14h=offsetType;0t+;]partoff;
+  if[7h<>offsetType;timeOffset:floor(`long$timeOffset-1970.01.01D00)%1e6];
+  offsetForTime[cid;top;timeOffset;tout]
+  }
 
 // Handling of error callbacks (rd_kafka_conf_set_error_cb)
 /* cid is an integer
